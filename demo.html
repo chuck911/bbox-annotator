@@ -23,9 +23,13 @@
 $(document).ready(function() {
   // Initialize the bounding-box annotator.
   var annotator = new BBoxAnnotator({
-    url: "/url/to/image.jpg",
-    input_method: 'fixed',    // Can be one of ['text', 'select', 'fixed']
-    labels: "object",
+    url: "http://s.imgur.com/images/404/giraffeweyes.png",
+    input_method: 'select2',    // Can be one of ['text', 'select', 'fixed']
+    labels: {
+      '猫': ['卷耳猫','布偶猫','鹰头猫'],
+      '狗': ['哈巴狗','大黑狗','卷毛狗'],
+      '熊': ['冰熊','棕熊','熊猫']
+    },
     onchange: function(entries) {
       // Input the text area on change. Use "hidden" input tag unless debugging.
       // <input id="annotation_data" name="annotation_data" type="hidden" />
