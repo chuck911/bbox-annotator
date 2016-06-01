@@ -39,6 +39,24 @@ class BBoxSelector
           @label_input.append '<option value="' + label + '">' +
                               label + '</option>'
         @label_input.change (e) -> this.blur()
+      when 'select2'
+        options.labels = [options.labels] if typeof options.labels == "string"
+        @label_input = $('<div class="multi-select"><select class="label_input" name="label"></select><select class="label_input" name="label2"></select></div>')
+        select1 = @label_input.find('select').eq(0)
+        select2 = @label_input.find('select').eq(1)
+        @label_box.append @label_input
+        for input in @label_input.find('select')
+          $input = $(input)
+          $input.append($('<option value>choose an item</option>'))
+        for label of options.labels
+          select1.append '<option value="' + label + '">' + label + '</option>'
+        select2.change (e) ->
+          $(this).parent().blur()
+        select1.change (e) ->
+          select2.html('<option value>choose an item</option>')
+          label1 =  select1.val()
+          for label in options.labels[label1]
+            select2.append '<option value="' + label + '">' + label + '</option>'
       when 'text'
         options.labels = [options.labels] if typeof options.labels == "string"
         @label_input = $('<input class="label_input" name="label" ' +
@@ -92,7 +110,12 @@ class BBoxSelector
     @label_box.hide()
     @selector.hide()
     data = this.rectangle()
-    data.label = $.trim(@label_input.val().toLowerCase())
+    if @label_input.hasClass('multi-select')
+      data.label = @label_input.find('select').map((i,select) ->
+        $.trim($(select).val())
+      ).get()
+    else
+      data.label = $.trim(@label_input.val().toLowerCase())
     @label_input.val('') unless options.input_method == 'fixed'
     data
 
